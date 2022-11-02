@@ -31,7 +31,7 @@ spec:
         - name: {{ .configMapRef }}
           configMap:
             name: {{ .configMapRef }}
-        {{- end }}            
+        {{- end }}
         {{- if .Values.backstage.extraVolumes }}
           {{- toYaml .Values.backstage.extraVolumes | nindent 8 }}
         {{- end }}
@@ -44,7 +44,7 @@ spec:
       {{- end }}
       containers:
         - name: backstage-backend
-          image: {{ include "backstage.image" . }}
+          image: roadiehq/community-backstage-image
           imagePullPolicy: {{ .Values.backstage.image.pullPolicy | quote -}}
           {{- if .Values.diagnosticMode.enabled }}
           command: {{- include "common.tplvalues.render" (dict "value" .Values.diagnosticMode.command "context" $) | nindent 12 }}
@@ -81,7 +81,7 @@ spec:
               value: {{ include "backstage.postgresql.host" . }}
             - name: POSTGRES_PORT
               value: "5432"
-            - name: POSTGRES_USER     
+            - name: POSTGRES_USER
               value: {{ .Values.postgresql.auth.username }}
             - name: POSTGRES_PASSWORD
               valueFrom:
@@ -101,7 +101,7 @@ spec:
             {{- range .Values.backstage.extraAppConfig }}
             - name: {{ .configMapRef }}
               mountPath: "/app/{{ .filename }}"
-              subPath: {{ .filename }} 
+              subPath: {{ .filename }}
             {{- end }}
             {{- if .Values.backstage.extraVolumeMounts }}
               {{- toYaml .Values.backstage.extraVolumeMounts | nindent 12 }}
